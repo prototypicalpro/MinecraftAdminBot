@@ -1,0 +1,26 @@
+{
+  "name": "minecraftadminbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prototypicalpro/MinecraftAdminBot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/prototypicalpro/MinecraftAdminBot/issues"
+  },
+  "homepage": "https://github.com/prototypicalpro/MinecraftAdminBot#readme",
+  "dependencies": {
+    "@azure/arm-compute": "^14.0.0",
+    "@azure/ms-rest-js": "^2.0.7",
+    "@azure/ms-rest-nodeauth": "^3.0.5",
+    "discord-command-parser": "^1.4.3",
+    "discord.js": "^12.2.0"
+  }
+}
