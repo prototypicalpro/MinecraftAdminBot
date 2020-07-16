@@ -1,0 +1,22 @@
+{
+    "apps": [{
+      "name"      : "DiscordBot",
+      "script"    : "index.js",
+      "env_production" : {
+        "NODE_ENV": "production"
+      }
+    }],
+    "deploy" : {
+      "production" : {
+        "user" : "discordbot",
+        "host" : ["ec2-34-219-42-63.us-west-2.compute.amazonaws.com"],
+        "ref"  : "origin/master",
+        "repo" : "https://github.com/prototypicalpro/MinecraftAdminBot.git",
+        "path" : "/home/discordbot/bot",
+        "post-deploy" : "npm install && pm2 startOrRestart ecosystem.json --env production",
+        "env"  : {
+          "NODE_ENV": "production"
+        }
+      }
+    }
+  }
