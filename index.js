@@ -16,16 +16,13 @@ client.on('ready', () => {
 
 client.on('message', async message => {
     if (message.channel.type === 'text' && message.channel.name === 'admin-bot') {
-        if (oneThingMutex.isLocked())
-            message.reply('I can only do one thing at a time.')
-
-        oneThingMutex.runExclusive(async () => {
-            const parsed = parser.parse(message, PREFIX)
-            if (!parsed.success) return
-
+        const parsed = parser.parse(message, PREFIX)
+        if (!parsed.success) return
+        if (parsed.command === 'start' || parsed.command === 'stop' || parsed.command === 'status') {
+            if (oneThingMutex.isLocked())
+                message.reply('I can only do one thing at a time.')
             // admin commands!
-            if (parsed.command === 'start' || parsed.command === 'stop' || parsed.command === 'status') {
-                
+            oneThingMutex.runExclusive(async () => {
                 // authenticate to azure
                 const creds = await msRestAzure.loginWithServicePrincipalSecret(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.TENANT_ID)
                 const computeClient = new ComputeManagementClient(creds, process.env.SUB_ID)
@@ -42,8 +39,9 @@ client.on('message', async message => {
                 const vm = await computeClient.virtualMachines.get(process.env.VM_RESOURCE_GROUP_NAME, process.env.VM_NAME, { expand: 'instanceView' })
                 const status = vm.instanceView.statuses.find(s => s.code.includes('PowerState')).code
                 message.reply(`VM is currently ${status.split('/')[1]}`)
-            }
-        })
+            })
+        }
+
     }
 })
 
