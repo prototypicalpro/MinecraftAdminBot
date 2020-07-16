@@ -19,26 +19,28 @@ client.on('message', async message => {
         const parsed = parser.parse(message, PREFIX)
         if (!parsed.success) return
         if (parsed.command === 'start' || parsed.command === 'stop' || parsed.command === 'status') {
-            if (oneThingMutex.isLocked())
-                message.reply('I can only do one thing at a time.')
+            if (oneThingMutex.isLocked()) {
+                await message.reply('I can only do one thing at a time.')
+                return
+            }
             // admin commands!
-            oneThingMutex.runExclusive(async () => {
+            await oneThingMutex.runExclusive(async () => {
                 // authenticate to azure
                 const creds = await msRestAzure.loginWithServicePrincipalSecret(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.TENANT_ID)
                 const computeClient = new ComputeManagementClient(creds, process.env.SUB_ID)
                 if (parsed.command === 'stop') {
-                    message.reply('Powering off the VM (this may take a minute)...')
+                    await message.reply('Powering off the VM (this may take a minute)...')
                     await computeClient.virtualMachines.deallocate(process.env.VM_RESOURCE_GROUP_NAME, process.env.VM_NAME)
-                    message.reply('Successfully Powered off the VM.')
+                    await message.reply('Successfully Powered off the VM.')
                 }
                 if (parsed.command === 'start') {
-                    message.reply('Powering on the VM (this may take a minute)...')
+                    await message.reply('Powering on the VM (this may take a minute)...')
                     await computeClient.virtualMachines.start(process.env.VM_RESOURCE_GROUP_NAME, process.env.VM_NAME)
-                    message.reply('Successfully Powered on the VM.')
+                    await message.reply('Successfully Powered on the VM.')
                 }
                 const vm = await computeClient.virtualMachines.get(process.env.VM_RESOURCE_GROUP_NAME, process.env.VM_NAME, { expand: 'instanceView' })
                 const status = vm.instanceView.statuses.find(s => s.code.includes('PowerState')).code
-                message.reply(`VM is currently ${status.split('/')[1]}`)
+                await message.reply(`VM is currently ${status.split('/')[1]}`)
             })
         }
 
