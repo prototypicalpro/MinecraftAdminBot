@@ -6,7 +6,7 @@ const { ComputeManagementClient } = require('@azure/arm-compute');
 const client = new Discord.Client()
 const PREFIX = '/'
 
-require('dotenv').config({ path: process.env.NODE_ENV === 'production' ? '~/.env' : null })
+require('dotenv').config({ path: process.env.NODE_ENV === 'production' ? '/home/discordbot/.env' : null })
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}`)
