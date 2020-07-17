@@ -64,6 +64,8 @@ client.on('message', async message => {
                 if (parsed.command === 'command') {
                     if (status === 'deallocated')
                         return await message.reply('You need to start the server with /start before sending commands to it')
+                    if (parsed.arguments.length === 0)
+                        return await message.reply('You didn\'t specify a command')
                     const mcCommand = parsed.arguments.join(' ')
                     await message.reply(`Sending command \`${mcCommand}\` to server`)
                     const result = await computeClient.virtualMachines.runCommand(process.env.VM_RESOURCE_GROUP_NAME, process.env.VM_NAME, {
