@@ -2,3 +2,6 @@ node_modules
 .vscode
 secrets.json
 .env
+mykey
+mykey*
+otherkey*
