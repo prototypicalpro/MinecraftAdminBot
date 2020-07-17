@@ -31,7 +31,7 @@ client.on('message', async message => {
     if (message.channel.type === 'text' && message.channel.name === 'admin-bot' && !message.author.bot) {
         const parsed = parser.parse(message, PREFIX)
         if (!parsed.success) return
-        if (parsed.command === 'start' || parsed.command === 'stop' || parsed.command === 'status') {
+        if (parsed.command === 'start' || parsed.command === 'stop' || parsed.command === 'status' || parsed.command === 'command') {
             if (oneThingMutex.isLocked()) {
                 await message.reply('I can only do one thing at a time.')
                 return
@@ -63,7 +63,7 @@ client.on('message', async message => {
                 // WARNING: this is potentially super unsafe! Do not add this bot to a server you do not trust
                 if (parsed.command === 'command') {
                     if (status === 'deallocated')
-                        return await message.reply('You need to start the server with /start before sending commands to it')
+                        return await message.reply('You need to start the server before sending commands to it')
                     if (parsed.arguments.length === 0)
                         return await message.reply('You didn\'t specify a command')
                     const mcCommand = parsed.arguments.join(' ')
