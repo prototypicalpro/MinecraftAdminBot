@@ -67,12 +67,13 @@ client.on('message', async message => {
                     if (parsed.arguments.length === 0)
                         return await message.reply('You didn\'t specify a command')
                     const mcCommand = parsed.arguments.join(' ')
-                    await message.reply(`Sending command \`${mcCommand}\` to server`)
+                    await message.reply(`Sending command \`${mcCommand}\` to server...`)
                     const result = await computeClient.virtualMachines.runCommand(process.env.VM_RESOURCE_GROUP_NAME, process.env.VM_NAME, {
                         commandId: 'RunShellScript',
-                        script: [`mark2 send ${mcCommand}`]
+                        script: [`sudo -u minecraft mark2 send ${mcCommand}`]
                     })
-                    await message.reply(`Recieved response \`${result.value.find(r => r.code.includes('StdOut')).message}\``)
+                    console.log(JSON.stringify(result))
+                    await message.reply('Done!')
                 }
                 // print the status
                 const afterstatus = await getServerStatus(computeClient)
